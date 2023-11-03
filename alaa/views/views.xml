@@ -1,0 +1,206 @@
+<odoo>
+    <data>
+
+        <!--form view-->
+        <record id="st_form_view" model="ir.ui.view">
+            <field name="name">st.form</field>
+            <field name="model">st.profile</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button string="share in whatsapp" type="object" name="action_whatsapp"
+                                class="oe_highlight" icon="fa-whatsapp" />
+                        <button string="A class" type="object" name="a_class" class="oe_highlight"/>
+                        <button string="B class" type="object" name="b_class" class="oe_highlight"/>
+                        <button string="C class" type="object" name="c_class" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" nolable="1" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+<!--                        context="{'default_student_id':active_id}"-->
+                        <div class="oe_button_box" name="button_box">
+                            <button name="%(alaa.student_wizard_action)d" class="oe_stat_button" type="action"
+                                    context="{'hide_student_id':1}"
+                                    string="payments"
+                                    icon="fa-money">
+                            </button>
+                        </div>
+                        <field name="image" widget='image' class="oe_avatar" />
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Enter Your Name ...."/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="st_code"/>
+                                <field name="email" widget="email"/>
+                                <field name="dob"/>
+                                <field name="city"/>
+                                <field name="gender" widget="radio"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="fees" widget="monetary" attrs="{'invisible':[('pay','=',True)]}" options="{'currency_id': %(base.europe)d}"/>
+                                <field name="pay" widget="boolean_toggle"/>
+<!--                                <field name="manager_id" widget="many2one_avatar" />-->
+                                <field name="manager_id" widget="selection" />
+                                <field name="phone" widget="phone" />
+                            </group>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Result">
+                                    <group style="width=66%;">
+                                        <field name="result_id" style="max-width:600px"/>
+                                    </group>
+                                    <group class="oe_subtotal_footer">
+                                        <field name="total"/>
+                                        <field name="total_subjects"/>
+                                        <field name="average"/>
+                                    </group>
+                                </page>
+                                <page string="Notes"
+                                      options="{'resizable':true}">
+                                    <group>
+                                        <field name="notes"/>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="student_profile_pivot">
+            <field name="name">Student Profile Pivot</field>
+            <field name="model">st.profile</field>
+            <field name="arch" type="xml">
+                <pivot>
+                    <field name="name"/>
+                    <field name="total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="student_profile_calendar">
+            <field name="name">Student Profile Calendar</field>
+            <field name="model">st.profile</field>
+            <field name="arch" type="xml">
+                <calendar string="Birthdays" color="name" date_start="dob">
+                    <field name="name"/>
+                    <field name="email"/>
+                    <field name="dob"/>
+                    <field name="city"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="student_profile_graph">
+            <field name="name">Student Profile Graph</field>
+            <field name="model">st.profile</field>
+            <field name="arch" type="xml">
+                <graph>
+                    <field name="name"/>
+                    <field name="total" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!--tree view-->
+        <record model="ir.ui.view" id="st_tree_view">
+            <field name="name">st.tree</field>
+            <field name="model">st.profile</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="gender == 'male'" decoration-danger="gender == 'female'">
+                    <field name="st_code"/>
+                    <field name="name"/>
+                    <field name="email"/>
+                    <field name="dob"/>
+                    <field name="city"/>
+                    <field name="fees" widget="monetary" options="{'currency_id': %(base.europe)d}" optional="show"
+                    sum="Total Payment "/>
+                    <field name="pay" widget="boolean_toggle"/>
+                    <field name="manager_id" widget="many2one_avatar_user"/>
+                    <field name="activity_ids" widget="list_activity" optional="hide"/>
+                    <field name="gender" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="student_profile_kanban">
+            <field name="name">Student Profile Kanban</field>
+            <field name="model">st.profile</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="dob"/>
+                    <field name="city"/>
+                    <field name="kan_color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.kan_color.raw_value)} oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <strong>
+                                        <field name="name"/>
+                                    </strong>
+                                    <div style="text-align:right;
+                                text-align: right;
+                                display: inline-block;
+                                float: right;
+                                background-color: #c1bcbc;
+                                padding: 2px 10px;
+                                color: #000000;
+                                border-radius: 20px;">
+                                        <field name="average"></field>
+                                    </div>
+                                    <div name="tags"/>
+                                    <ul>
+                                        <li>DOB :
+                                            <field name="dob"></field>
+                                        </li>
+                                        <li>Email :
+                                            <field name="email"/>
+                                        </li>
+                                        <li>City :
+                                            <field name="city"></field>
+                                        </li>
+                                    </ul>
+                                    <div name="tags"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- actions -->
+
+        <record model="ir.actions.act_window" id="st_profile_action">
+            <field name="name">student</field>
+            <field name="res_model">st.profile</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph,kanban</field>
+        </record>
+
+        <!-- Top menu item -->
+        <menuitem name="Student Management"
+                  id="student_menu_root"/>
+
+        <!-- menu categories -->
+        <menuitem name="Student Info"
+                  id="st_info"
+                  parent="student_menu_root"/>
+
+        <menuitem name="Student Profiles"
+                  id="st_profile"
+                  parent="st_info"
+                  action="st_profile_action"/>
+
+    </data>
+</odoo>

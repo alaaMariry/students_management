@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+student_mang,st.profile,model_st_profile,base.group_user,1,1,1,1
+subject_mang,st.subjects,model_st_subjects,base.group_user,1,1,1,1
+result_mang,st.result,model_st_result,base.group_user,1,1,1,1
+student_wizard,student.wizard,model_student_wizard,base.group_user,1,1,1,1
